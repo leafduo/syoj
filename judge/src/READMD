@@ -1,5 +1,5 @@
 keeper.py is a daemon.
 judged.py is an XML-RPC server.
-main.py is used to extract, complie source code, run run.py and judge.
+main.py is used to extract, complie source code, prepare, run run.py,judge and clean.
 run.py is used to run programs.
 config dictionary is for configure files.

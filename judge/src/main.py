@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 
 #    SYOJ - Simple Yummy Online Judge (backend)
 #    Copyright (C) 2009  leafduo@gmail.com

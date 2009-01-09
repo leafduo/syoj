@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 
 #    SYOJ - Simple Yummy Online Judge (backend)
 #    Copyright (C) 2009  leafduo@gmail.com
@@ -16,4 +16,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+import subprocess
+
+judged = subprocess.Popen("./judged.py")
+while True:
+    judged.wait();
+    print("judged.py(pid ",judged.pid, ") is killed, return code is ", judged.returncode, '.',sep='') #todo:log file
+    judged=subprocess.Popen("./judged.py");
 
