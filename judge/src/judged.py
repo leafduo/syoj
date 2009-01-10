@@ -20,6 +20,10 @@
 from xmlrpc.server import SimpleXMLRPCServer
 
 def problemTest(problem):
+    """Test if the problem submitted is valid.
+
+       A boolean is returned, True if valid and False indicates invalid.
+    """
     if "src" in problem.keys() \
             and "lang" in problem.keys() \
             and "pid" in problem.keys() \
@@ -32,10 +36,11 @@ def problemTest(problem):
     else:
         return False
 
-class Problem():
-    pass
-
 def receive(problem):
+    """Receive a problem and return an returncode.
+
+       0 for OK and 1 for incomplete problems.
+    """
     print(problem)
     if problemTest(problem):
         pass    #call main.py
@@ -43,7 +48,13 @@ def receive(problem):
     else:
         return 1
 
-if __name__ == "__main__":
+def buildServer():
+    """build an XMLRPC Server and serve forever \
+    waiting for problem to submit.
+    """
     server = SimpleXMLRPCServer(("localhost",2439))
     server.register_function(receive)
     server.serve_forever()
+
+if __name__ == "__main__":
+    buildServer()
