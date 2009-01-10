@@ -75,7 +75,7 @@ def buildServer():
     global config
     server = SimpleXMLRPCServer((config.get("XMLRPCServer","host"), \
 		    config.getint("XMLRPCServer","port")))
-    server.register_function(receive)
+    server.register_function(receive, "send")
     server.serve_forever()
 
 if __name__ == "__main__":
