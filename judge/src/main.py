@@ -17,3 +17,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+#test judge.py
+
+import pickle
+import sys
+
+f = open("./problem.dat","rb")
+a = pickle.load(f)
+print(a)

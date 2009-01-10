@@ -18,6 +18,8 @@
 #
 
 from xmlrpc.server import SimpleXMLRPCServer
+import pickle
+import subprocess
 
 def problemTest(problem):
     """Test if the problem submitted is valid.
@@ -37,13 +39,13 @@ def problemTest(problem):
         return False
 
 def receive(problem):
-    """Receive a problem and return an returncode.
+    """Receive a problem, call main.py and return an returncode.
 
-       0 for OK and 1 for incomplete problems.
+       returncode: 0 for OK and 1 for incomplete problems.
     """
-    print(problem)
     if problemTest(problem):
-        pass    #call main.py
+        pickle.dump(problem, open("./problem.dat","wb"))
+        main = subprocess.Popen("./main.py")
         return 0
     else:
         return 1
@@ -52,7 +54,7 @@ def buildServer():
     """build an XMLRPC Server and serve forever \
     waiting for problem to submit.
     """
-    server = SimpleXMLRPCServer(("localhost",2439))
+    server = SimpleXMLRPCServer(("localhost", 2439))
     server.register_function(receive)
     server.serve_forever()
 
