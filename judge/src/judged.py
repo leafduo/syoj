@@ -20,6 +20,12 @@
 from xmlrpc.server import SimpleXMLRPCServer
 import pickle
 import subprocess
+import configparser
+
+def configInit():
+	global config
+	config = configparser.SafeConfigParser()
+	config.read("./config/judged.conf")
 
 def problemTest(problem):
     """Test if the problem submitted is valid.
@@ -29,11 +35,13 @@ def problemTest(problem):
     if "src" in problem.keys() \
             and "lang" in problem.keys() \
             and "pid" in problem.keys() \
-            and 'tid' in problem.keys() \
+            and "tid" in problem.keys() \
+	    and "ver" in problem.keys() \
             and type(problem["src"]) == type('') \
             and type(problem["lang"]) == type('') \
             and type(problem["pid"]) == type(0) \
-            and type(problem["tid"]) == type(0):
+            and type(problem["tid"]) == type(0) \
+	    and type(problem["ver"]) == type(''):
         return True
     else:
         return False
@@ -54,9 +62,12 @@ def buildServer():
     """build an XMLRPC Server and serve forever \
     waiting for problem to submit.
     """
-    server = SimpleXMLRPCServer(("localhost", 2439))
+    global config
+    server = SimpleXMLRPCServer((config.get("XMLRPCServer","host"), \
+		    config.getint("XMLRPCServer","port")))
     server.register_function(receive)
     server.serve_forever()
 
 if __name__ == "__main__":
+    configInit()
     buildServer()
