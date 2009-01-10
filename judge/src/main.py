@@ -22,6 +22,6 @@
 import pickle
 import sys
 
-f = open("./problem.dat","rb")
+f = open("/home/leafduo/.syoj/problem.dat","rb")
 a = pickle.load(f)
 print(a)

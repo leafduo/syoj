@@ -21,11 +21,15 @@ from xmlrpc.server import SimpleXMLRPCServer
 import pickle
 import subprocess
 import configparser
+import os
 
 def configInit():
-	global config
-	config = configparser.SafeConfigParser()
-	config.read("./config/judged.conf")
+    global config
+    global configGlobal
+    config = configparser.SafeConfigParser()
+    config.read("./config/judged.conf")
+    configGlobal = configparser.SafeConfigParser()
+    configGlobal.read("./config/global.conf")
 
 def problemTest(problem):
     """Test if the problem submitted is valid.
@@ -52,7 +56,10 @@ def receive(problem):
        returncode: 0 for OK and 1 for incomplete problems.
     """
     if problemTest(problem):
-        pickle.dump(problem, open("./problem.dat","wb"))
+        pickle.dump(problem, \
+                open(os.path.expanduser( \
+                configGlobal.get("global","WorkingDictionary")) \
+                + "problem.dat", "wb"))
         main = subprocess.Popen("./main.py")
         return 0
     else:
