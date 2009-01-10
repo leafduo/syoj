@@ -17,11 +17,47 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-#test judge.py
-
 import pickle
-import sys
+import os
+import subprocess
+import configparser
 
-f = open("/home/leafduo/.syoj/problem.dat","rb")
-a = pickle.load(f)
-print(a)
+class Result():
+    pass
+
+result = Result()
+
+def configInit():
+    """Config initial.
+    
+       Read global & language configure.
+    """
+    configGlobal = configparser.SafeConfigParser()
+    configGlobal.read("./config/global.conf")
+    global configLang
+    configLang = configparser.SafeConfigParser()
+    configLang.read("./config/lang.conf")
+    global path
+    path = configGlobal.get("global","WorkingDictionary");
+
+def unpack():
+    """Unpack the source code and set language, pid, tid."""
+    global lang, pid, tid
+    problem = pickle.load(os.path.join(path,"problem.dat"))
+    lang = problem["lang"]
+    pid = problem["pid"]
+    tid = problem["tid"]
+    srcfile = open(path+"src."+configLang.get(lang,extension),'w')
+    print(src, file = srcfile)
+
+def compile():
+    """Complie the source code."""
+    compiler = subprocess.Popen( \
+            [configLang.get(lang,"compiler"), \
+            configLang.get(lang,"arguments")],
+            )
+    compiler.wait()
+    if (compiler.returncode)
+        print("compile error.")     #todo:log file & errer handling
+    else:
+
