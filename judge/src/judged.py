@@ -17,12 +17,33 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from xmlrpc.server import SimpleXMLRPCServer
 
-#test keeper.py
-import time
+def problemTest(problem):
+    if "src" in problem.keys() \
+            and "lang" in problem.keys() \
+            and "pid" in problem.keys() \
+            and 'tid' in problem.keys() \
+            and type(problem["src"]) == type('') \
+            and type(problem["lang"]) == type('') \
+            and type(problem["pid"]) == type(0) \
+            and type(problem["tid"]) == type(0):
+        return True
+    else:
+        return False
 
-if __name__=="__main__":
-    while True:
-        print("OK")
-        time.sleep(5)
+class Problem():
+    pass
 
+def receive(problem):
+    print(problem)
+    if problemTest(problem):
+        pass    #call main.py
+        return 0
+    else:
+        return 1
+
+if __name__ == "__main__":
+    server = SimpleXMLRPCServer(("localhost",2439))
+    server.register_function(receive)
+    server.serve_forever()
