@@ -19,9 +19,16 @@
 
 import subprocess
 
-judged = subprocess.Popen("./judged.py")
-while True:
-    judged.wait();
-    print("judged.py(pid ",judged.pid, ") is killed, return code is ", judged.returncode, '.',sep='') #todo:log file
-    judged=subprocess.Popen("./judged.py");
+def keep():
+    """start judged.py, and keep it running"""
+    judged = subprocess.Popen("./judged.py")
+    while True:
+        judged.wait()
+        print("judged.py(pid ",judged.pid, \
+                ") is killed, return code is ", judged.returncode, \
+                '.',sep='') 
+        #todo:log file
+        judged=subprocess.Popen("./judged.py")
 
+if __name__=="__main__":
+    keep()
