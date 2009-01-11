@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 #    SYOJ - Simple Yummy Online Judge (backend)
 #    Copyright (C) 2009  leafduo@gmail.com
@@ -40,12 +40,12 @@ def problemTest(problem):
             and "lang" in problem.keys() \
             and "pid" in problem.keys() \
             and "tid" in problem.keys() \
-	    and "ver" in problem.keys() \
+	        and "ver" in problem.keys() \
             and type(problem["src"]) == type('') \
             and type(problem["lang"]) == type('') \
             and type(problem["pid"]) == type(0) \
             and type(problem["tid"]) == type(0) \
-	    and type(problem["ver"]) == type(''):
+	        and type(problem["ver"]) == type(''):
         return True
     else:
         return False

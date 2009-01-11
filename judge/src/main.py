@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 #    SYOJ - Simple Yummy Online Judge (backend)
 #    Copyright (C) 2009  leafduo@gmail.com
@@ -19,10 +19,14 @@
 
 import pickle
 import os
+import sys
 import subprocess
 import configparser
 
 class Result():
+    pass
+
+class Test():
     pass
 
 result = Result()
@@ -30,34 +34,82 @@ result = Result()
 def configInit():
     """Config initial.
     
-       Read global & language configure.
+       Read global, language & problem configure.
     """
     configGlobal = configparser.SafeConfigParser()
     configGlobal.read("./config/global.conf")
     global configLang
     configLang = configparser.SafeConfigParser()
     configLang.read("./config/lang.conf")
-    global path
-    path = configGlobal.get("global","WorkingDictionary");
+    global configProblemGlobal
+    configProblemGlobal = configparser.SafeConfigParser()
+    configProblemGlobal.read("./config/problem.conf")
+    global workingDict
+    workingDict = configGlobal.get("global","WorkingDictionary");
+    #configProblem load in unpack()
 
 def unpack():
     """Unpack the source code and set language, pid, tid."""
     global lang, pid, tid
-    problem = pickle.load(os.path.join(path,"problem.dat"))
+    problem = pickle.load(os.path.join(workingDict, "problem.dat"))
     lang = problem["lang"]
     pid = problem["pid"]
     tid = problem["tid"]
-    srcfile = open(path+"src."+configLang.get(lang,extension),'w')
+    srcfile = open(workingDict + "src." + configLang.get(lang,extension), 'w')
     print(src, file = srcfile)
+    global configProblem
+    configProblem = configParser.SafeConfigParser()
+    configProblem.read(os.path.join( \
+            configProblemGlobal.get("location", "path"), \
+            pid, \
+            ".config"))
+
+def resultInit():
+    """Result Initial"""
+    result.tid = tid
+    result.pid = pid
+    result.test = [];
 
 def compile():
     """Complie the source code."""
     compiler = subprocess.Popen( \
-            [configLang.get(lang,"compiler"), \
-            configLang.get(lang,"arguments")],
+            [configLang.get(lang, "compiler"), \
+            configLang.get(lang, "arguments") + \
+            workingDict + "src." + configLang.get(lang,extension),],
             )
     compiler.wait()
     if (compiler.returncode)
-        print("compile error.")     #todo:log file & errer handling
+        print("compiling error.")     #todo:log file
+        testCase = Test()
+        testCase.score = 0
+        testCase.error = "Compiling Error"
+        testCase.errorDesc = "Compiling Error"
+        for i in range(0, configProblem.get("point", "numberOfTest")):
+            result.test.append(testCase)
+        send(result)
     else:
+        run()
 
+def run():
+    """Run the program numberOfTest times."""
+    pass
+
+def judge():
+    """Judge whether the answer is correct."""
+    pass
+
+def clean():
+    """Clean the working dictionary for the next run."""
+
+def cleanAll():
+    """Clean ALL in the working dictionary."""
+
+def send():
+    """Send result to frontend."""
+    pass
+
+
+if __name__ == "__main__"
+    unpack()
+    resultInit()
+    compile()
