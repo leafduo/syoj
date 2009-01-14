@@ -57,11 +57,10 @@ def receive(problem):
     """
     if problemTest(problem):
         pickle.dump(problem, \
-                open(os.path.expanduser( \
-                os.path.join( \
-                configGlobal.get("global", \
-                os.path.join("WorkingDictionary")), \
-                "problem.dat")), \
+                open(os.path.join( \
+                os.path.expanduser( \
+                configGlobal.get("global", "WorkingDictionary")), \
+                "problem.dat"), \
                 "wb"))
         main = subprocess.Popen("./main.py")
         return 0

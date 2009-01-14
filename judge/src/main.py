@@ -51,18 +51,22 @@ def configInit():
 def unpack():
     """Unpack the source code and set language, pid, tid."""
     global lang, pid, tid
-    problem = pickle.load(os.path.join(workingDict, "problem.dat"))
+    problem = pickle.load(open( \
+            os.path.expanduser(os.path.join(workingDict, "problem.dat")), \
+            "rb"))
     lang = problem["lang"]
     pid = problem["pid"]
     tid = problem["tid"]
-    srcfile = open(workingDict + "src." + configLang.get(lang,extension), 'w')
-    print(src, file = srcfile)
+    srcfile = open(os.path.expanduser(os.path.join(workingDict,\
+            "src." +\
+            configLang.get(lang, "extension"))), 'w')
+    print(problem["src"], file = srcfile)
     global configProblem
-    configProblem = configParser.SafeConfigParser()
-    configProblem.read(os.path.join( \
+    configProblem = configparser.SafeConfigParser()
+    configProblem.read(os.path.expanduser(os.path.join( \
             configProblemGlobal.get("location", "path"), \
-            pid, \
-            ".config"))
+            str(pid), \
+            ".config")))
 
 def resultInit():
     """Result Initial"""
@@ -74,21 +78,34 @@ def compile():
     """Complie the source code."""
     compiler = subprocess.Popen( \
             [configLang.get(lang, "compiler"), \
-            configLang.get(lang, "arguments") + \
-            workingDict + "src." + configLang.get(lang,extension),],
+            configLang.get(lang, "arguments"), \
+            os.path.expanduser(os.path.join(
+            workingDict, "src." + configLang.get(lang, "extension")))],
             )
     compiler.wait()
-    if (compiler.returncode)
+    if (compiler.returncode):
         print("compiling error.")     #todo:log file
         testCase = Test()
         testCase.score = 0
         testCase.error = "Compiling Error"
         testCase.errorDesc = "Compiling Error"
-        for i in range(0, configProblem.get("point", "numberOfTest")):
+        for i in range(0, configProblem.getint("point", "numberOfTest")):
             result.test.append(testCase)
         send(result)
     else:
         run()
+
+def prepare(n):
+    """do some preparation.
+
+    like link input etc.
+    """
+    os.symlink(os.path.join( \
+            configProblem.Global.get("location", "path"), \
+            n, ".in"), \
+            os.path.join(workingDict, \
+            configProblem.get("file", "input"))
+            )
 
 def run():
     """Run the program numberOfTest times."""
@@ -109,7 +126,8 @@ def send():
     pass
 
 
-if __name__ == "__main__"
+if __name__ == "__main__":
+    configInit()
     unpack()
     resultInit()
     compile()
