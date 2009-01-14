@@ -99,7 +99,7 @@ def compile():
 def prepare(n):
     """do some preparation.
 
-    like link input etc.
+    like linking input etc.
     """
     os.symlink(os.path.expanduser(os.path.join( \
             configProblemGlobal.get("location", "path"), \
