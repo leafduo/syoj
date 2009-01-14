@@ -112,7 +112,7 @@ def prepare(n):
 
 def run():
     """Run the program numberOfTest times."""
-    for i in range(1, configProblem.get("point", "numberOfTest") + 1):
+    for i in range(1, configProblem.getint("point", "numberOfTest") + 1):
         preapre(i)
         #todo:change path
         subprocess.Popen()
