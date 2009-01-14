@@ -82,6 +82,7 @@ def compile():
             os.path.expanduser(os.path.join(
             workingDict, "src." + configLang.get(lang, "extension")))],
             )
+    #todo: change path
     compiler.wait()
     if (compiler.returncode):
         print("compiling error.")     #todo:log file
@@ -100,15 +101,22 @@ def prepare(n):
 
     like link input etc.
     """
-    os.symlink(os.path.join( \
-            configProblem.Global.get("location", "path"), \
-            n, ".in"), \
-            os.path.join(workingDict, \
-            configProblem.get("file", "input"))
+    os.symlink(os.path.expanduser(os.path.join( \
+            configProblemGlobal.get("location", "path"), \
+            str(pid),
+            configProblem.get("file", "input"))), \
+            os.path.expanduser(os.path.join( \
+            workingDict, \
+            str(n) + ".in")), \
             )
 
 def run():
     """Run the program numberOfTest times."""
+    for i in range(1,11):
+        preapre(i)
+        #todo:change path
+        subprocess.Popen()
+        clean()
     pass
 
 def judge():
@@ -121,7 +129,7 @@ def clean():
 def cleanAll():
     """Clean ALL in the working dictionary."""
 
-def send():
+def send(result):
     """Send result to frontend."""
     pass
 
