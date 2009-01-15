@@ -76,13 +76,13 @@ def resultInit():
 
 def compile():
     """Complie the source code."""
+    os.chdir(workingDict);  #change path
     compiler = subprocess.Popen( \
             [configLang.get(lang, "compiler"), \
             configLang.get(lang, "arguments"), \
             os.path.expanduser(os.path.join(
             workingDict, "src." + configLang.get(lang, "extension")))],
             )
-    #todo: change path
     compiler.wait()
     if (compiler.returncode):
         print("compiling error.")     #todo:log file
@@ -114,8 +114,9 @@ def run():
     """Run the program numberOfTest times."""
     for i in range(1, configProblem.getint("point", "numberOfTest") + 1):
         preapre(i)
-        #todo:change path
-        subprocess.Popen()
+        os.chdir(workingDict)   #change path
+        program = subprocess.Popen('./a.out');
+        
         clean()
     pass
 
