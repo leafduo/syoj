@@ -22,6 +22,7 @@ import os
 import sys
 import subprocess
 import configparser
+import time
 
 class Result():
     pass
@@ -90,7 +91,8 @@ def compile():
         testCase.score = 0
         testCase.error = "Compiling Error"
         testCase.errorDesc = "Compiling Error"
-        for i in range(0, configProblem.getint("point", "numberOfTest")):
+        for i in range(1, configProblem.getint("point", "numberOfTest") + 1):
+            testCase.id = i + 1
             result.test.append(testCase)
         send(result)
     else:
@@ -116,8 +118,21 @@ def run():
         preapre(i)
         os.chdir(workingDict)   #change path
         program = subprocess.Popen('./a.out');
-        
+        timeLimit = configProblem.getfloat("time", "time");
+        time.sleep(timeLimit);
+        if program.poll() == None: 
+            #time out
+            program.kill()
+            testCase = Test()
+            testCase.score = 0
+            testCase.id = i
+            testCase.error = "TLE"
+            testCase.errorDesc = "TLE"
+            result.test.append(testCase)
+        else:
+            judge(i)
         clean()
+    cleanAll()
     pass
 
 def judge():
