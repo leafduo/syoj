@@ -23,6 +23,8 @@ import sys
 import subprocess
 import configparser
 import time
+import filecmp
+import shutil
 
 class Result():
     pass
@@ -46,7 +48,7 @@ def configInit():
     configProblemGlobal = configparser.SafeConfigParser()
     configProblemGlobal.read("./config/problem.conf")
     global workingDict
-    workingDict = configGlobal.get("global","WorkingDictionary");
+    workingDict = os.path.expanduser(configGlobal.get("global", "WorkingDictionary"));
     #configProblem load in unpack()
 
 def unpack():
@@ -94,7 +96,7 @@ def compile():
         for i in range(1, configProblem.getint("point", "numberOfTest") + 1):
             testCase.id = i + 1
             result.test.append(testCase)
-        send(result)
+        send()
     else:
         run()
 
@@ -115,7 +117,7 @@ def prepare(n):
 def run():
     """Run the program numberOfTest times."""
     for i in range(1, configProblem.getint("point", "numberOfTest") + 1):
-        preapre(i)
+        prepare(i)
         os.chdir(workingDict)   #change path
         program = subprocess.Popen('./a.out');
         timeLimit = configProblem.getfloat("time", "time");
@@ -132,22 +134,38 @@ def run():
         else:
             judge(i)
         clean()
-    cleanAll()
     pass
 
-def judge():
+def judge(n):
     """Judge whether the answer is correct."""
-    pass
+    os.symlink(os.path.expanduser('~/.syoj/problem/1/1.ans'), os.path.expanduser('~/.syoj/working/test.ans'))
+    if filecmp.cmp('test.ans', 'test.out', False):
+        testCase = Test()
+        testCase.score = 10
+        testCase.id = n
+        testCase.error = 'None'
+        testCase.errorDesc = 'None'
+        result.test.append(testCase)
+    else:
+        testCase = Test()
+        testCase.score = 0
+        testCase.id = n
+        testCase.error = 'WA'
+        testCase.errorDesc = 'WA'
+        result.test.append(testCase)
 
 def clean():
     """Clean the working dictionary for the next run."""
+pass
 
 def cleanAll():
     """Clean ALL in the working dictionary."""
+    shutil.rmtree(os.path.expanduser('~/.syoj/working'))
+    os.mkdir(os.path.expanduser('~/.syoj/working'))
 
-def send(result):
+def send():
     """Send result to frontend."""
-    pass
+    print(result.test[0].error)
 
 
 if __name__ == "__main__":
@@ -155,3 +173,6 @@ if __name__ == "__main__":
     unpack()
     resultInit()
     compile()
+    send()
+    cleanAll()
+
