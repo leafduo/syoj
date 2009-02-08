@@ -25,6 +25,7 @@ import configparser
 import time
 import filecmp
 import shutil
+import xmlrpc.client
 
 class Result():
     pass
@@ -165,7 +166,8 @@ def cleanAll():
 
 def send():
     """Send result to frontend."""
-    print(result.test[0].error)
+    server = xmlrpc.client.ServerProxy('http://localhost:8080', allow_none=True)
+    server.send(result)
 
 
 if __name__ == "__main__":
@@ -173,6 +175,6 @@ if __name__ == "__main__":
     unpack()
     resultInit()
     compile()
-    send()
     cleanAll()
+    send()
 
