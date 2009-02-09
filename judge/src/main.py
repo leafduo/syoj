@@ -155,8 +155,10 @@ def judge(n):
         testCase.errorDesc = 'WA'
         result.test.append(testCase)
 
-def clean():
+def clean(n):
     """Clean the working dictionary for the next run."""
+    os.unlink(os.path.expanduser('~/.syoj/working/test.out'))
+    os.unlink(os.path.expanduser('~/.syoj/working/test.in'))
 pass
 
 def cleanAll():
