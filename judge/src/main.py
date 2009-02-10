@@ -99,13 +99,8 @@ def compile():
     compiler.wait()
     if (compiler.returncode):
         print("compiling error.")     #todo:log file
-        testCase = Test()
-        testCase.score = 0
-        testCase.error = "Compiling Error"
-        testCase.errorDesc = "Compiling Error"
         for i in range(1, configProblem.getint("point", "numberOfTest") + 1):
-            testCase.id = i + 1
-            result.test.append(testCase)
+            addTest(i + 1, 0, 'Compiling Error', 'Compiling Error')
         send()
     else:
         run()
@@ -135,12 +130,7 @@ def run():
         if program.poll() == None: 
             #time out
             program.kill()
-            testCase = Test()
-            testCase.score = 0
-            testCase.id = i
-            testCase.error = "TLE"
-            testCase.errorDesc = "TLE"
-            result.test.append(testCase)
+            addTest(i, 0, 'TLE', 'TLE')
         else:
             judge(i)
         clean()
@@ -156,19 +146,9 @@ def judge(n):
             configProblem.get('problem', 'name') + '.ans'))
     os.symlink(src, dst)
     if filecmp.cmp('test.ans', 'test.out', False):
-        testCase = Test()
-        testCase.score = 10
-        testCase.id = n
-        testCase.error = 'None'
-        testCase.errorDesc = 'None'
-        result.test.append(testCase)
+        addTest(n, 10, 'None', 'None')
     else:
-        testCase = Test()
-        testCase.score = 0
-        testCase.id = n
-        testCase.error = 'WA'
-        testCase.errorDesc = 'WA'
-        result.test.append(testCase)
+        addTest(n, 0, 'WA', 'Wa')
 
 def clean():
     """Clean the working dictionary for the next run."""
