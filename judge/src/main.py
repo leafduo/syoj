@@ -49,7 +49,8 @@ def configInit():
     configProblemGlobal = configparser.SafeConfigParser()
     configProblemGlobal.read("./config/problem.conf")
     global workingDict
-    workingDict = os.path.expanduser(configGlobal.get("global", "WorkingDictionary"));
+    workingDict = os.path.expanduser( \
+            configGlobal.get("global", "WorkingDictionary"));
     #configProblem load in unpack()
 
 def unpack():
@@ -139,7 +140,9 @@ def run():
 
 def judge(n):
     """Judge whether the answer is correct."""
-    os.symlink(os.path.expanduser('~/.syoj/problem/1/1.ans'), os.path.expanduser('~/.syoj/working/test.ans'))
+    src = os.path.expanduser(configProblemGlobal.get('location', 'path'))
+    os.symlink(os.path.expanduser('~/.syoj/problem/1/1.ans'), \
+            os.path.expanduser('~/.syoj/working/test.ans'))
     if filecmp.cmp('test.ans', 'test.out', False):
         testCase = Test()
         testCase.score = 10
