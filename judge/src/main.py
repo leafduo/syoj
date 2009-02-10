@@ -113,7 +113,7 @@ def prepare(n):
             configProblem.get("file", "input"))), \
             os.path.expanduser(os.path.join( \
             workingDict, \
-            str(n) + ".in")), \
+            configProblem.get('problem', 'name') + ".in")), \
             )
 
 def run():
@@ -140,9 +140,13 @@ def run():
 
 def judge(n):
     """Judge whether the answer is correct."""
-    src = os.path.expanduser(configProblemGlobal.get('location', 'path'))
-    os.symlink(os.path.expanduser('~/.syoj/problem/1/1.ans'), \
-            os.path.expanduser('~/.syoj/working/test.ans'))
+    src = os.path.expanduser(os.path.join( \
+            configProblemGlobal.get('location', 'path'), \
+            str(pid), str(n) + '.ans'))
+    dst = os.path.expanduser(os.path.join( \
+            workingDict, \
+            configProblem.get('problem', 'name') + '.ans'))
+    os.symlink(src, dst)
     if filecmp.cmp('test.ans', 'test.out', False):
         testCase = Test()
         testCase.score = 10
@@ -158,7 +162,7 @@ def judge(n):
         testCase.errorDesc = 'WA'
         result.test.append(testCase)
 
-def clean(n):
+def clean():
     """Clean the working dictionary for the next run."""
     os.unlink(os.path.expanduser('~/.syoj/working/test.out'))
     os.unlink(os.path.expanduser('~/.syoj/working/test.in'))
