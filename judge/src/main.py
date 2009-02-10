@@ -35,6 +35,14 @@ class Test():
 
 result = Result()
 
+def addTest(id, score, error, errorDesc)
+    testCase = Test()
+    testCase.id = id
+    testCase.score = score
+    testCase.error = error
+    testCase.errorDesc = errorDesc
+    result.test.append(testCase)
+
 def configInit():
     """Config initial.
     
