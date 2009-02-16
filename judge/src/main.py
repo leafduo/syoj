@@ -36,6 +36,8 @@ class Test():
 result = Result()
 
 def addTest(id, score, error, errorDesc)
+    """Add a test to result."""
+
     testCase = Test()
     testCase.id = id
     testCase.score = score
