@@ -29,17 +29,24 @@ class Config:
         self.__lang.read('./config/lang.conf')
         self.__library = configparser.SafeConfigParser()
         self.__library.read('./config/problem.conf')
+        self.__problem = SafeConfigParser()
     def pathToLibrary(self):
         """return the path to library."""
         library.get('location', 'path')
     def setPid(self, pid):
         """Set problem id & problem config."""
         self.__pid = pid
-        self.__problem = configparser.SafeConfigParser()
         pathToProblem = os.path.expanduser(os.path.join( \
                 self.__pathToLibrary(), str(self.pid), '.config'
                 ))
         self.__problem.read(pathToProblem)
+    def pWorking(self):
+        return os.path.expanduser( \
+                self.__Global.get('global', 'WorkingDictionary'));
+    def srcfile(self):
+        return os.path.expanduser(os.path.join( \
+                self.pWorking(), 'src.' + \
+                self.__lang.get(self.__lang, 'extension')))
 
 
 
